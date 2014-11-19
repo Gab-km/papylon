@@ -21,7 +21,7 @@ class PropTest(TestCase):
         assert not is_valid
         assert actual.stopped is None
 
-    def test_given_a_property_which_will_raise_exception_when_Prop_execute_runs_the_property_then_the_prop_will_be_stoppes(self):
+    def test_given_a_property_which_will_raise_exception_when_Prop_execute_runs_the_property_then_the_prop_will_be_stopped(self):
         sut = Prop([arb_int(), arb_int()], lambda x, y: x * y == (x + y) / 0)
         actual = sut.execute()
         assert actual.done is None

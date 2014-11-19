@@ -1,59 +1,41 @@
 # -*- coding: utf-8 -*-
-import re
 import sys
 import traceback
 
 
-class CheckResult:
-    def __init__(self, func_name, label, success, failure, exceptions, results):
-        self.func_name = func_name
-        self.label = label
-        self.success = success
-        self.failure = failure
-        self.exceptions = exceptions
-        self.results = results
-
-
 class PropChecker:
-    def __init__(self, count=100):
+    def __init__(self, count):
         self.count = count if count >= 1 else 100
 
     def check(self, prop):
-        success, failure = 0, 0
-        exceptions = {}
-        results = []
 
         try:
             for i in range(self.count):
                 prop_result = prop.execute()
 
                 if prop_result.done:
-                    _, _, is_valid = prop_result.done
-                    if is_valid:
-                        success += 1
-                    else:
-                        failure += 1
-                    results.append(prop_result)
+                    _, inputs, is_valid = prop_result.done
+                    if not is_valid:
+                        return "Falsified after {0} tests.".format(i) + \
+                            "\n> {0}".format(inputs)
                 else:
-                    _, _, error = prop_result.stopped
-                    exception_key = re.match('^([a-zA-Z]+)\(.*$', repr(error)).group(1)
-                    exceptions.setdefault(exception_key, 0)
-                    exceptions[exception_key] += 1
+                    _, inputs, error = prop_result.stopped
+                    return "Falsified after {0} tests.".format(i) + \
+                        "\n> {0}".format(inputs) + \
+                        "\nwith exception:\n" + \
+                        str(error)
 
-                    results.append(prop_result)
-
-            return CheckResult(
-                prop.func.__name__,
-                prop.label,
-                success,
-                failure,
-                exceptions,
-                results
-            )
+            return "OK, passed {0} tests.".format(self.count)
         except Exception as error:
-            print('Exception is raised', file=sys.stderr)
+            print('[Papylon] Some exception is raised.', file=sys.stderr)
             print(error.args[0], file=sys.stderr)
             _, _, ex_traceback = sys.exc_info()
             traceback.print_tb(ex_traceback, limit=10, file=sys.stderr)
+            return None
+            #TODO: return some results?
 
-            #TODO: return subinstance of TestResult
+
+def check(prop, count=100):
+    checker = PropChecker(count=count)
+    result = checker.check(prop)
+    print(result)

@@ -29,7 +29,6 @@ class Prop:
     def execute(self):
         inputs = None
         try:
-            #inputs = [gen.generate() for gen in self.arb.arbitrary()]
             inputs = []
             for arb in self.arbs:
                 gen = arb.arbitrary()
@@ -37,6 +36,24 @@ class Prop:
             is_valid = self.func(*inputs)
 
             return PropResult.to_be_done(self.func.__name__, inputs, is_valid)
-        #except self.exceptions as error:
+
         except Exception as error:
             return PropResult.to_be_stopped(self.func.__name__, inputs, error)
+
+
+# def for_all_as_method(arbitraries):
+#     def make_prop(func_to_check):
+#         def inner(target, *args):
+#             def func_without_target(*a):
+#                 return func_to_check(target, *a)
+#             return Prop(arbitraries, func_without_target)
+#         return inner
+#     return make_prop
+
+
+# def for_all(arbitraries):
+#     def make_prop(func_to_check):
+#         def inner(*args):
+#             return Prop(arbitraries, func_to_check)
+#         return inner
+#     return make_prop

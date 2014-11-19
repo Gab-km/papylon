@@ -4,25 +4,6 @@ import random
 
 from papylon.gen import Gen
 
-class NonNegativeInt:
-    pass
-
-
-class PositiveInt:
-    pass
-
-
-class NonZeroInt:
-    pass
-
-
-class NormalFloat:
-    pass
-
-
-class NonEmptyString:
-    pass
-
 
 class AbstractArbitrary:
     def arbitrary(self):
@@ -42,5 +23,40 @@ class ArbInteger(AbstractArbitrary):
         return self.gen
 
 
+class ArbFloat(AbstractArbitrary):
+    def __init__(self):
+        def gen():
+            min_float = -1.0 - sys.maxsize
+            max_float = sys.maxsize
+            while True:
+                yield random.uniform(min_float, max_float)
+        self.gen = Gen(gen)
+
+    def arbitrary(self):
+        return self.gen
+
+
+class ArbList(AbstractArbitrary):
+    def __init__(self, arb_type, max_length=100):
+        def gen():
+            min_length = 0
+            length = random.randint(min_length, max_length)
+            arb = arb_type.arbitrary()
+            while True:
+                yield [arb.generate() for i in range(length)]
+        self.gen = Gen(gen)
+
+    def arbitrary(self):
+        return self.gen
+
+
 def arb_int():
     return ArbInteger()
+
+
+def arb_float():
+    return ArbFloat()
+
+
+def arb_list(arb_type, max_length):
+    return ArbList(arb_type, max_length=max_length)
