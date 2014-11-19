@@ -5,7 +5,9 @@ import traceback
 
 class PropChecker:
     def __init__(self, count):
-        self.count = count if count >= 1 else 100
+        if count < 1:
+            raise ValueError("Argument `count` should be a integer greater than or equal to 1.")
+        self.count = count
 
     def check(self, prop):
 
@@ -16,11 +18,11 @@ class PropChecker:
                 if prop_result.done:
                     _, inputs, is_valid = prop_result.done
                     if not is_valid:
-                        return "Falsified after {0} tests.".format(i) + \
+                        return "Falsified after {0} tests.".format(i+1) + \
                             "\n> {0}".format(inputs)
                 else:
                     _, inputs, error = prop_result.stopped
-                    return "Falsified after {0} tests.".format(i) + \
+                    return "Falsified after {0} tests.".format(i+1) + \
                         "\n> {0}".format(inputs) + \
                         "\nwith exception:\n" + \
                         str(error)

@@ -37,7 +37,7 @@ class ArbFloat(AbstractArbitrary):
 
 
 class ArbList(AbstractArbitrary):
-    def __init__(self, arb_type, max_length=100):
+    def __init__(self, arb_type, max_length):
         def gen():
             min_length = 0
             length = random.randint(min_length, max_length)
@@ -58,5 +58,5 @@ def arb_float():
     return ArbFloat()
 
 
-def arb_list(arb_type, max_length):
+def arb_list(arb_type, max_length=100):
     return ArbList(arb_type, max_length=max_length)

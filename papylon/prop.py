@@ -20,11 +20,9 @@ class PropResult:
 
 
 class Prop:
-    def __init__(self, arbs, func, label="", exceptions=None):
+    def __init__(self, arbs, func):
         self.arbs = arbs
         self.func = func
-        self.label = label
-        self.exceptions = exceptions
 
     def execute(self):
         inputs = None
@@ -39,6 +37,10 @@ class Prop:
 
         except Exception as error:
             return PropResult.to_be_stopped(self.func.__name__, inputs, error)
+
+
+def for_all(arbs, func):
+    return Prop(arbs, func)
 
 
 # def for_all_as_method(arbitraries):

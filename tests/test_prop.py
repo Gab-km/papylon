@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
-from papylon.prop import Prop
-from papylon.arbitrary import arb_int
+from papylon.prop import Prop, for_all
+from papylon.arbitrary import arb_int, arb_float
 
 
 class PropTest(TestCase):
@@ -28,3 +28,11 @@ class PropTest(TestCase):
         assert actual.stopped is not None
         _, _, error = actual.stopped
         assert type(error) == ZeroDivisionError
+
+    def test_when_Prop_from_for_all_function_act_as_a_property(self):
+        sut = for_all([arb_float(), arb_float()], lambda x, y: x + y == y + x)
+        actual = sut.execute()
+        assert actual.done is not None
+        _, _, is_valid = actual.done
+        assert is_valid
+        assert actual.stopped is None

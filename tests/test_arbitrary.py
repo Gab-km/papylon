@@ -21,7 +21,7 @@ class ArbitraryTest(TestCase):
 
     def test_ArbList_arbitrary_returns_generator_for_list(self):
         arb_type = ArbInteger()
-        sut = ArbList(arb_type)
+        sut = ArbList(arb_type, max_length=100)
         gen = sut.arbitrary()
         actual = gen.generate()
         assert type(actual) == list
@@ -37,5 +37,5 @@ class ArbitraryTest(TestCase):
 
     def test_arb_list_returns_ArbList_instance(self):
         arb_type = ArbFloat()
-        actual = ArbList(arb_type)
+        actual = arb_list(arb_type)
         assert isinstance(actual, ArbList)
