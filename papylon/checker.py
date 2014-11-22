@@ -1,7 +1,40 @@
 # -*- coding: utf-8 -*-
 import sys
-import traceback
+from papylon.printer import SimplePrinter
 
+
+class CheckResult:
+    def __init__(self):
+        self.passed = None
+        self.falsified = None
+        self.troubled = None
+
+    @staticmethod
+    def pass_all(count):
+        result = CheckResult()
+        result.passed = (count,)
+        return result
+
+    @staticmethod
+    def falsify(run_count, inputs, error=None):
+        result = CheckResult()
+        result.falsified = (run_count, inputs, error)
+        return result
+
+    @staticmethod
+    def trouble(error, ex_traceback):
+        result = CheckResult()
+        result.troubled = (error, ex_traceback)
+        return result
+
+    def has_passed(self):
+        return self.passed is not None
+
+    def has_falsified(self):
+        return self.falsified is not None
+
+    def has_troubled(self):
+        return self.troubled is not None
 
 class PropChecker:
     def __init__(self, count):
@@ -18,26 +51,19 @@ class PropChecker:
                 if prop_result.done:
                     _, inputs, is_valid = prop_result.done
                     if not is_valid:
-                        return "Falsified after {0} tests.".format(i+1) + \
-                            "\n> {0}".format(inputs)
+                        return CheckResult.falsify(i+1, inputs)
                 else:
                     _, inputs, error = prop_result.stopped
-                    return "Falsified after {0} tests.".format(i+1) + \
-                        "\n> {0}".format(inputs) + \
-                        "\nwith exception:\n" + \
-                        str(error)
+                    return CheckResult.falsify(i+1, inputs, error)
 
-            return "OK, passed {0} tests.".format(self.count)
+            return CheckResult.pass_all(self.count)
         except Exception as error:
-            print('[Papylon] Some exception is raised.', file=sys.stderr)
-            print(error.args[0], file=sys.stderr)
             _, _, ex_traceback = sys.exc_info()
-            traceback.print_tb(ex_traceback, limit=10, file=sys.stderr)
-            return None
-            #TODO: return some results?
+            return CheckResult.trouble(error.args[0], ex_traceback)
 
 
-def check(prop, count=100):
+def check(prop, count=100, printer_class=SimplePrinter):
     checker = PropChecker(count=count)
     result = checker.check(prop)
-    print(result)
+    printer = printer_class()
+    printer.print_result(result)
