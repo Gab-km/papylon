@@ -36,6 +36,7 @@ class CheckResult:
     def has_troubled(self):
         return self.troubled is not None
 
+
 class PropChecker:
     def __init__(self, count):
         if count < 1:
@@ -43,13 +44,12 @@ class PropChecker:
         self.count = count
 
     def check(self, prop):
-
         try:
             for i in range(self.count):
                 prop_result = prop.execute()
 
-                if prop_result.done:
-                    _, inputs, is_valid = prop_result.done
+                if prop_result.has_finished():
+                    _, inputs, is_valid = prop_result.finished
                     if not is_valid:
                         return CheckResult.falsify(i+1, inputs)
                 else:

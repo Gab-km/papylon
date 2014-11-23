@@ -3,20 +3,26 @@
 
 class PropResult:
     def __init__(self):
-        self.done = None
+        self.finished = None
         self.stopped = None
 
     @staticmethod
-    def to_be_done(func_name, inputs, is_valid):
+    def finish(func_name, inputs, is_valid):
         result = PropResult()
-        result.done = (func_name, inputs, is_valid)
+        result.finished = (func_name, inputs, is_valid)
         return result
 
     @staticmethod
-    def to_be_stopped(func_name, inputs, error):
+    def stop(func_name, inputs, error):
         result = PropResult()
         result.stopped = (func_name, inputs, error)
         return result
+
+    def has_finished(self):
+        return self.finished is not None
+
+    def has_stopped(self):
+        return self.stopped is not None
 
 
 class Prop:
@@ -33,10 +39,10 @@ class Prop:
                 inputs.append(gen.generate())
             is_valid = self.func(*inputs)
 
-            return PropResult.to_be_done(self.func.__name__, inputs, is_valid)
+            return PropResult.finish(self.func.__name__, inputs, is_valid)
 
         except Exception as error:
-            return PropResult.to_be_stopped(self.func.__name__, inputs, error)
+            return PropResult.stop(self.func.__name__, inputs, error)
 
 
 def for_all(arbs, func):
