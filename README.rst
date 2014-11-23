@@ -37,3 +37,6 @@ If a property failed, Papylon reports which arbitrary(s) made it failed:
 
   Falsified after 1 tests.
   > [950620953.3142085, 4571184.136292458]
+
+.. image:: https://travis-ci.org/Gab-km/papylon.svg
+    :target: https://travis-ci.org/Gab-km/papylon
