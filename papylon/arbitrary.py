@@ -2,7 +2,7 @@
 import sys
 import random
 
-from papylon.gen import Gen
+from papylon.gen import Gen, choose, frequency, map
 
 
 class AbstractArbitrary:
@@ -12,12 +12,7 @@ class AbstractArbitrary:
 
 class ArbInteger(AbstractArbitrary):
     def __init__(self):
-        def gen():
-            min_int = - 1 - sys.maxsize
-            max_int = sys.maxsize
-            while True:
-                yield random.randint(min_int, max_int)
-        self.gen = Gen(gen)
+        self.gen = choose(-1-sys.maxsize, sys.maxsize)
 
     def arbitrary(self):
         return self.gen
@@ -25,12 +20,16 @@ class ArbInteger(AbstractArbitrary):
 
 class ArbFloat(AbstractArbitrary):
     def __init__(self):
-        def gen():
-            min_float = -1.0 - sys.maxsize
-            max_float = sys.maxsize
-            while True:
-                yield random.uniform(min_float, max_float)
-        self.gen = Gen(gen)
+        self.gen = choose(-1.0-sys.maxsize, sys.maxsize)
+
+    def arbitrary(self):
+        return self.gen
+
+
+class ArbStr(AbstractArbitrary):
+    def __init__(self):
+        self.gen = frequency([(0xD800, map(chr, choose(0, 0xD800-1))),
+                              (0xFFFF-0xDFFF, map(chr, choose(0xdFFF+1, 0xFFFF)))])
 
     def arbitrary(self):
         return self.gen
@@ -56,6 +55,10 @@ def arb_int():
 
 def arb_float():
     return ArbFloat()
+
+
+def arb_str():
+    return ArbStr()
 
 
 def arb_list(arb_type, max_length=100):
