@@ -5,11 +5,12 @@ import bisect
 
 
 class Gen:
-    def __init__(self, gen):
+    def __init__(self, gen, mapper=lambda x: x):
         self.gen = gen()
+        self.mapper = mapper
 
     def generate(self):
-        return self.gen.send(None)
+        return self.mapper(self.gen.send(None))
 
 
 def one_of(gens):
@@ -45,3 +46,7 @@ def frequency(weighted_gens):
     cumdist = list(itertools.accumulate(weights))
     x = random.random() * cumdist[-1]
     return gens[bisect.bisect(cumdist, x)]
+
+
+def map(f, gen):
+    return Gen(lambda: gen.gen, f)

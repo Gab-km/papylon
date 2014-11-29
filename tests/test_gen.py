@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from papylon.gen import Gen, one_of, choose, frequency
+from papylon.gen import Gen, one_of, choose, frequency, map
 
 
 def test_gen_generate_returns_generated_value():
@@ -122,3 +122,14 @@ def test_when_frequency_runs_10000_times_then_its_choices_should_be_satisfied_wi
     assert assert_frequency(count_1, parameter, 0.5, 0.95)
     assert assert_frequency(count_10, parameter, 0.3, 0.95)
     assert assert_frequency(count_100, parameter, 0.2, 0.95)
+
+
+def test_map_should_create_new_Gen_instance_with_mapper_function():
+    gen = choose(1, 10)
+    new_gen = map(lambda x: x * 2, gen)
+    generated_by_new_gen = new_gen.generate()
+    assert type(generated_by_new_gen) == int
+    assert generated_by_new_gen in range(2, 21, 2)
+    generated_by_gen = gen.generate()
+    assert type(generated_by_gen) == int
+    assert generated_by_gen in range(1, 11)
