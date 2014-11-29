@@ -7,8 +7,10 @@ root = os.path.abspath(os.path.dirname(__file__))
 try:
     with open(os.path.join(root, 'README.rst')) as f:
         README = f.read()
+    with open(os.path.join(root, 'CHANGES.rst')) as f:
+        CHANGES = f.read()
 except IOError:
-    README = ''
+    README, CHANGES = '', ''
 
 install_requires = [
     'setuptools'
@@ -19,13 +21,14 @@ tests_require = [
 ]
 
 setup(name='papylon',
-      version='0.1.1',
+      version='0.2',
       description='Random testing for Python',
-      long_description=README,
+      long_description=README + '\n\n' + CHANGES,
       classifiers=[
           "Development Status :: 3 - Alpha",
           "Intended Audience :: Developers",
           "License :: OSI Approved :: MIT License",
+          "Programming Language :: Python",
           "Programming Language :: Python :: 3.3",
           "Programming Language :: Python :: 3.4",
           "Topic :: Software Development :: Libraries",
