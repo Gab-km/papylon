@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-from papylon.arbitrary import ArbInteger, ArbFloat, ArbStr, ArbList, arb_int, arb_float, arb_str, arb_list
+from papylon.arbitrary import (
+    ArbInteger, ArbFloat, ArbChar, ArbList, ArbStr, arb_int, arb_float, arb_char, arb_list, arb_str
+)
 
 
 def test_ArbInteger_arbitrary_returns_generator_for_integer():
@@ -19,8 +21,8 @@ def test_ArbFloat_arbitrary_returns_generator_for_float():
     assert (-1.0 - sys.maxsize) <= actual <= 1.0 * sys.maxsize
 
 
-def test_ArbStr_arbitrary_returns_generator_for_string():
-    sut = ArbStr()
+def test_ArbChar_arbitrary_returns_generator_for_1_char_string():
+    sut = ArbChar()
     gen = sut.arbitrary()
     actual = gen.generate()
     assert type(actual) == str
@@ -37,6 +39,14 @@ def test_ArbList_arbitrary_returns_generator_for_list():
     assert len(actual) <= 100
 
 
+def test_ArbStr_arbitrary_returns_generator_for_string():
+    sut = ArbStr(max_length=20)
+    gen = sut.arbitrary()
+    actual = gen.generate()
+    assert type(actual) == str
+    assert len(actual) <= 20
+
+
 def test_arb_int_returns_ArbInteger_instance():
     actual = arb_int()
     assert isinstance(actual, ArbInteger)
@@ -47,12 +57,16 @@ def test_arb_float_returns_ArbFloat_instance():
     assert isinstance(actual, ArbFloat)
 
 
-def test_arb_str_returns_ArbStr_instance():
-    actual = arb_str()
-    assert isinstance(actual, ArbStr)
+def test_arb_char_returns_ArbChar_instance():
+    actual = arb_char()
+    assert isinstance(actual, ArbChar)
 
 
 def test_arb_list_returns_ArbList_instance():
     arb_type = ArbFloat()
     actual = arb_list(arb_type)
     assert isinstance(actual, ArbList)
+
+def test_arb_str_returns_ArbStr_instance():
+    actual = arb_str()
+    assert isinstance(actual, ArbStr)

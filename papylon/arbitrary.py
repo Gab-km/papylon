@@ -26,7 +26,7 @@ class ArbFloat(AbstractArbitrary):
         return self.gen
 
 
-class ArbStr(AbstractArbitrary):
+class ArbChar(AbstractArbitrary):
     def __init__(self):
         self.gen = frequency([(0xD800, map(chr, choose(0, 0xD800-1))),
                               (0xFFFF-0xDFFF, map(chr, choose(0xdFFF+1, 0xFFFF)))])
@@ -49,6 +49,20 @@ class ArbList(AbstractArbitrary):
         return self.gen
 
 
+class ArbStr(AbstractArbitrary):
+    def __init__(self, max_length):
+        def gen():
+            min_length = 0
+            length = random.randint(min_length, max_length)
+            arb = arb_char().arbitrary()
+            while True:
+                yield "".join(arb.generate() for i in range(length))
+        self.gen = Gen(gen)
+
+    def arbitrary(self):
+        return self.gen
+
+
 def arb_int():
     return ArbInteger()
 
@@ -57,9 +71,13 @@ def arb_float():
     return ArbFloat()
 
 
-def arb_str():
-    return ArbStr()
+def arb_char():
+    return ArbChar()
 
 
 def arb_list(arb_type, max_length=100):
     return ArbList(arb_type, max_length=max_length)
+
+
+def arb_str(max_length=20):
+    return ArbStr(max_length=max_length)
