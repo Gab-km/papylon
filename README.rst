@@ -15,7 +15,8 @@ We can write a simple property with Python code:
   from papylon.checker import check
 
   # reversed and reversed list is the same of the original list
-  p1 = for_all([arb_list(arb_int(), max_length=20)], lambda x: list(reversed(list(reversed(x)))) == x)
+  p1 = for_all([arb_list(arb_int(), max_length=20)],
+               lambda x: list(reversed(list(reversed(x)))) == x)
   check(p1)
 
 When we run the script above, we can see the result as following:
