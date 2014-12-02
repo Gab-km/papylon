@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 import sys
 from papylon.arbitrary import (
-    ArbInteger, ArbFloat, ArbChar, ArbList, ArbStr, arb_int, arb_float, arb_char, arb_list, arb_str
+    AbstractArbitrary,
+    ArbInteger, ArbFloat, ArbChar, ArbList, ArbStr,
+    arb_int, arb_float, arb_char, arb_list, arb_str,
+    from_gen
 )
+from papylon.gen import choose
 
 
 def test_ArbInteger_arbitrary_returns_generator_for_integer():
@@ -67,6 +71,21 @@ def test_arb_list_returns_ArbList_instance():
     actual = arb_list(arb_type)
     assert isinstance(actual, ArbList)
 
+
 def test_arb_str_returns_ArbStr_instance():
     actual = arb_str()
     assert isinstance(actual, ArbStr)
+
+
+def test_from_gen_returns_AbstractArbitrary_instance_whose_arbitrary_returns_given_Gen_instance():
+    sut1 = from_gen(choose(0, 9))
+    assert isinstance(sut1, AbstractArbitrary)
+    sut2 = from_gen(choose(10, 99))
+    assert isinstance(sut2, AbstractArbitrary)
+
+    gen1 = sut1.arbitrary()
+    actual1 = gen1.generate()
+    assert 0 <= actual1 <= 9
+    gen2 = sut2.arbitrary()
+    actual2 = gen2.generate()
+    assert 10 <= actual2 <= 99
