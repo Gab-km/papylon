@@ -81,3 +81,12 @@ def arb_list(arb_type, max_length=100):
 
 def arb_str(max_length=20):
     return ArbStr(max_length=max_length)
+
+
+def from_gen(gen):
+    arb = AbstractArbitrary()
+    arb.gen = gen
+    def new_arbitrary(this):
+        return this.gen
+    arb.arbitrary.__func__.__code__ = new_arbitrary.__code__
+    return arb
