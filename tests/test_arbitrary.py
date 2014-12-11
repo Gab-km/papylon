@@ -22,7 +22,7 @@ def test_ArbFloat_arbitrary_returns_generator_for_float():
     gen = sut.arbitrary()
     actual = gen.generate()
     assert type(actual) == float
-    assert (-1.0 - sys.maxsize) <= actual <= 1.0 * sys.maxsize
+    assert (-sys.float_info.max <= actual <= sys.float_info.max) or (abs(actual) == float('inf')) or (actual != actual)
 
 
 def test_ArbChar_arbitrary_returns_generator_for_1_char_string():

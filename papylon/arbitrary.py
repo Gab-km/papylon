@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import random
+import struct
 
 from papylon.gen import Gen, choose, frequency, map
 
@@ -20,7 +21,12 @@ class ArbInteger(AbstractArbitrary):
 
 class ArbFloat(AbstractArbitrary):
     def __init__(self):
-        self.gen = choose(-1.0-sys.maxsize, sys.maxsize)
+        def gen():
+            s = random.randint(0, 1)                # sign
+            e = random.randint(0, 0x7ff)            # exponent
+            f = random.randint(0, 0xfffffffffffff)  # fraction
+            yield struct.unpack('d', struct.pack('Q', (s << 63) | (e << 52) | f))[0]
+        self.gen = Gen(gen)
 
     def arbitrary(self):
         return self.gen
