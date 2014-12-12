@@ -2,8 +2,8 @@
 import sys
 from papylon.arbitrary import (
     AbstractArbitrary,
-    ArbInteger, ArbFloat, ArbChar, ArbList, ArbStr,
-    arb_int, arb_float, arb_char, arb_list, arb_str,
+    ArbInteger, ArbFloat, ArbChar, ArbDate, ArbList, ArbStr,
+    arb_int, arb_float, arb_char, arb_date, arb_list, arb_str,
     from_gen
 )
 from papylon.gen import choose
@@ -32,6 +32,15 @@ def test_ArbChar_arbitrary_returns_generator_for_1_char_string():
     assert type(actual) == str
     orded = ord(actual)
     assert 0 <= orded < 0xD800 or 0xDFFF < orded <= 0xFFFF
+
+
+def test_ArbDate_arbitrary_returns_generator_for_datetime():
+    import datetime
+    sut = ArbDate()
+    gen = sut.arbitrary()
+    actual = gen.generate()
+    assert type(actual) == datetime.datetime
+    assert datetime.datetime.min <= actual <= datetime.datetime.max
 
 
 def test_ArbList_arbitrary_returns_generator_for_list():
@@ -64,6 +73,11 @@ def test_arb_float_returns_ArbFloat_instance():
 def test_arb_char_returns_ArbChar_instance():
     actual = arb_char()
     assert isinstance(actual, ArbChar)
+
+
+def test_arb_date_returns_ArbDate_instance():
+    actual = arb_date()
+    assert isinstance(actual, ArbDate)
 
 
 def test_arb_list_returns_ArbList_instance():
