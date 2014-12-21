@@ -4,13 +4,32 @@ import itertools
 import bisect
 
 
+class StopGeneration(StopIteration):
+    def __init__(self, trial_to_generate, *args, **kwargs):
+        StopIteration.__init__(self, *args, **kwargs)
+        self.trial_to_generate = trial_to_generate
+
+
 class Gen:
-    def __init__(self, gen, mapper=lambda x: x):
+    DEFAULT_TRIAL = 100
+
+    def __init__(self, gen, mapper=lambda x: x, pred=lambda x: True, trial=DEFAULT_TRIAL):
         self.gen = gen()
         self.mapper = mapper
+        self.pred = pred
+        self.trial = trial
 
     def generate(self):
-        return self.mapper(self.gen.send(None))
+        for i, value in enumerate(self.gen):
+            mapped = self.mapper(value)
+            if self.pred(mapped):
+                return mapped
+
+            if i >= self.trial:
+                raise StopGeneration(i)
+
+    def such_that(self, pred, trial=DEFAULT_TRIAL):
+        return Gen(lambda: self.gen, pred=pred, trial=trial)
 
 
 def one_of(gens):
