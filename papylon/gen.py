@@ -69,3 +69,10 @@ def frequency(weighted_gens):
 
 def map(f, gen):
     return Gen(lambda: gen.gen, f)
+
+
+def constant(value):
+    def gen():
+        while True:
+            yield value
+    return Gen(gen)
