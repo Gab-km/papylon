@@ -21,7 +21,7 @@ tests_require = [
 ]
 
 setup(name='papylon',
-      version='0.3',
+      version='0.4.1',
       description='Random testing for Python',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

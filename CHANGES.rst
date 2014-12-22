@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4 (2014-12-23)
+----------------
+
+* add ``such_that`` method into ``papylon.gen.Gen`` class
+* add ``constant`` function into ``papylon.gen`` module
+* support ``.whl`` files instead of ``.egg`` files in packaging
+
 0.3 (2014-12-13)
 ----------------
 

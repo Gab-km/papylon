@@ -125,7 +125,7 @@ def test_when_choose_takes_arguments_both_of_which_are_int_then_returns_Gen_inst
     assert -50 <= actual <= 50
 
 
-def test_when_frequency_runs_10000_times_then_its_choices_should_be_satisfied_with_accuracy_ge95_percents():
+def test_when_frequency_runs_10000_times_then_its_choices_should_be_satisfied_with_accuracy_ge94_percents():
     from papylon.gen import Gen, frequency
 
     def generate_1():
@@ -160,9 +160,11 @@ def test_when_frequency_runs_10000_times_then_its_choices_should_be_satisfied_wi
 
     def assert_frequency(actual, param, weight, accuracy):
         return actual >= param * weight * accuracy
-    assert assert_frequency(count_1, parameter, 0.5, 0.95)
-    assert assert_frequency(count_10, parameter, 0.3, 0.95)
-    assert assert_frequency(count_100, parameter, 0.2, 0.95)
+
+    assuring_accuracy = 0.94
+    assert assert_frequency(count_1, parameter, 0.5, assuring_accuracy)
+    assert assert_frequency(count_10, parameter, 0.3, assuring_accuracy)
+    assert assert_frequency(count_100, parameter, 0.2, assuring_accuracy)
 
 
 def test_map_should_create_new_Gen_instance_with_mapper_function():
