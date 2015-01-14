@@ -15,11 +15,11 @@ def test_given_falsified_result_without_error_when_print_result_then_report_not_
     from papylon.printer import SimplePrinter
     from papylon.checker import CheckResult
 
-    result = CheckResult.falsify(5, ["test"])
+    result = CheckResult.falsify(5, ["test"], 0)
     sut = SimplePrinter(result)
     sut.print_result()
     out, err = capsys.readouterr()
-    assert out == "Falsified after 5 tests.\n> ['test']\n"
+    assert out == "Falsified after 5 tests (0 shrinks):\n> ['test']\n"
     assert err == ""
 
 
@@ -27,11 +27,11 @@ def test_given_falsified_result_with_error_when_print_result_then_report_not_ok_
     from papylon.printer import SimplePrinter
     from papylon.checker import CheckResult
 
-    result = CheckResult.falsify(6, ["ham", "egg"], ValueError("SPAM!"))
+    result = CheckResult.error(6, ["ham", "egg"], ValueError("SPAM!"))
     sut = SimplePrinter(result)
     sut.print_result()
     out, err = capsys.readouterr()
-    assert out == "Falsified after 6 tests.\n> ['ham', 'egg']\nwith exception:\nSPAM!\n"
+    assert out == "Falsified after 6 tests:\n> ['ham', 'egg']\nwith exception:\nSPAM!\n"
     assert err == ""
 
 
@@ -56,7 +56,7 @@ def test_given_troubled_result_when_print_result_then_report_error(capsys):
     sut.print_result()
     out, err = capsys.readouterr()
     assert out == ""
-    assert err == "[Papylon] Some exception is raised.\nholy grail\n"
+    assert err == "[Papylon] Some exception is raised:\nholy grail\n"
 
 
 def test_given_unknown_result_when_print_result_then_report_unknown(capsys):

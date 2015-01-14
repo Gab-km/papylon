@@ -1,105 +1,175 @@
 # -*- coding: utf-8 -*-
-import sys
-from papylon.arbitrary import (
-    AbstractArbitrary,
-    ArbInteger, ArbFloat, ArbChar, ArbDate, ArbList, ArbStr,
-    arb_int, arb_float, arb_char, arb_date, arb_list, arb_str,
-    from_gen
-)
-from papylon.gen import choose
+def test_ArbInteger_arbitrary_returns_integer():
+    from papylon.arbitrary import ArbInteger
+    import sys
 
-
-def test_ArbInteger_arbitrary_returns_generator_for_integer():
     sut = ArbInteger()
-    gen = sut.arbitrary()
-    actual = gen.generate()
+    actual = sut.arbitrary()
     assert type(actual) == int
     assert (-1 - sys.maxsize) <= actual <= sys.maxsize
 
 
-def test_ArbFloat_arbitrary_returns_generator_for_float():
+def test_when_ArbInteger_shrink_takes_non_zero_integer_then_returns_a_iterable_with_smaller_integers():
+    from papylon.arbitrary import ArbInteger
+
+    sut = ArbInteger()
+    actual = list(sut.shrink(5))
+    expected = [0, 3, -3, 4, -4]
+    assert actual == expected
+
+
+def test_ArbFloat_arbitrary_returns_float():
+    from papylon.arbitrary import ArbFloat
+    import sys
+    import math
+
     sut = ArbFloat()
-    gen = sut.arbitrary()
-    actual = gen.generate()
+    actual = sut.arbitrary()
     assert type(actual) == float
-    assert (-sys.float_info.max <= actual <= sys.float_info.max) or (abs(actual) == float('inf')) or (actual != actual)
+    assert (-sys.float_info.max <= actual <= sys.float_info.max) or\
+           (abs(actual) == float('inf')) or\
+           (math.isnan(actual))
 
 
-def test_ArbChar_arbitrary_returns_generator_for_1_char_string():
+def test_when_ArbFloat_shrink_takes_non_zero_float_then_returns_a_iterable_with_smaller_floats():
+    from papylon.arbitrary import ArbFloat
+
+    sut = ArbFloat()
+    actual = list(sut.shrink(4.0))
+    expected = [0.0, 2.0, -2.0, 3.0, -3.0, 3.5, -3.5, 3.75, -3.75, 3.875, -3.875, 3.9375, -3.9375, 3.96875, -3.96875,
+                3.984375, -3.984375, 3.9921875, -3.9921875, 3.99609375, -3.99609375, 3.998046875, -3.998046875]
+    assert actual == expected
+
+
+def test_ArbChar_arbitrary_returns_1_char_string():
+    from papylon.arbitrary import ArbChar
+
     sut = ArbChar()
-    gen = sut.arbitrary()
-    actual = gen.generate()
+    actual = sut.arbitrary()
     assert type(actual) == str
     orded = ord(actual)
     assert 0 <= orded < 0xD800 or 0xDFFF < orded <= 0xFFFF
 
 
-def test_ArbDate_arbitrary_returns_generator_for_datetime():
+def test_when_ArbChar_shrink_takes_char_p_then_returns_a_iterable_with_a_b_c():
+    from papylon.arbitrary import ArbChar
+
+    sut = ArbChar()
+    actual = list(sut.shrink('p'))
+    expected = ['a', 'b', 'c']
+    assert actual == expected
+
+
+def test_ArbDate_arbitrary_returns_datetime_instance():
+    from papylon.arbitrary import ArbDate
     import datetime
+
     sut = ArbDate()
-    gen = sut.arbitrary()
-    actual = gen.generate()
+    actual = sut.arbitrary()
     assert type(actual) == datetime.datetime
     assert datetime.datetime.min <= actual <= datetime.datetime.max
 
 
-def test_ArbList_arbitrary_returns_generator_for_list():
+def test_when_ArbDate_shrink_takes_1987_06_05_04_32_10_then_returns_a_iterable_with_1987_06_05_04_32_00():
+    from papylon.arbitrary import ArbDate
+    import datetime
+
+    sut = ArbDate()
+    actual = list(sut.shrink(datetime.datetime(1987, 6, 5, 4, 32, 10)))
+    expected = [datetime.datetime(1987, 6, 5, 4, 32)]
+    assert actual == expected
+
+
+def test_ArbList_arbitrary_returns_list():
+    from papylon.arbitrary import ArbInteger, ArbList
+
     arb_type = ArbInteger()
     sut = ArbList(arb_type, max_length=100)
-    gen = sut.arbitrary()
-    actual = gen.generate()
+    actual = sut.arbitrary()
     assert type(actual) == list
     assert len(actual) <= 100
 
 
+def test_when_ArbList_shrink_takes_a_list_then_returns_another_list_smaller_than_the_original():
+    from papylon.arbitrary import ArbFloat, ArbList
+
+    arb_type = ArbFloat()
+    sut = ArbList(arb_type, max_length=100)
+    actual = list(sut.shrink([3, 3.1, 3.14, 3.141]))
+    expected = [[3.1, 3.14, 3.141], [3, 3.14, 3.141], [3, 3.1, 3.141], [3, 3.1, 3.14]]
+    assert actual == expected
+
+
 def test_ArbStr_arbitrary_returns_generator_for_string():
+    from papylon.arbitrary import ArbStr
+
     sut = ArbStr(max_length=20)
-    gen = sut.arbitrary()
-    actual = gen.generate()
+    actual = sut.arbitrary()
     assert type(actual) == str
     assert len(actual) <= 20
 
 
+def test_when_ArbStr_shrink_takes_a_string_Python_then_returns_a_iterable_with_strings_smaller_than_the_original():
+    from papylon.arbitrary import ArbStr
+
+    sut = ArbStr(max_length=20)
+    actual = list(sut.shrink('Python'))
+    expected = ['ython', 'Pthon', 'Pyhon', 'Pyton', 'Pythn', 'Pytho']
+    assert actual == expected
+
+
 def test_arb_int_returns_ArbInteger_instance():
+    from papylon.arbitrary import arb_int, ArbInteger
+
     actual = arb_int()
     assert isinstance(actual, ArbInteger)
 
 
 def test_arb_float_returns_ArbFloat_instance():
+    from papylon.arbitrary import arb_float, ArbFloat
+
     actual = arb_float()
     assert isinstance(actual, ArbFloat)
 
 
 def test_arb_char_returns_ArbChar_instance():
+    from papylon.arbitrary import arb_char, ArbChar
+
     actual = arb_char()
     assert isinstance(actual, ArbChar)
 
 
 def test_arb_date_returns_ArbDate_instance():
+    from papylon.arbitrary import arb_date, ArbDate
+
     actual = arb_date()
     assert isinstance(actual, ArbDate)
 
 
 def test_arb_list_returns_ArbList_instance():
+    from papylon.arbitrary import arb_list, ArbFloat, ArbList
     arb_type = ArbFloat()
     actual = arb_list(arb_type)
     assert isinstance(actual, ArbList)
 
 
 def test_arb_str_returns_ArbStr_instance():
+    from papylon.arbitrary import arb_str, ArbStr
+
     actual = arb_str()
     assert isinstance(actual, ArbStr)
 
 
 def test_from_gen_returns_AbstractArbitrary_instance_whose_arbitrary_returns_given_Gen_instance():
+    from papylon.gen import choose
+    from papylon.arbitrary import from_gen, AbstractArbitrary
+
     sut1 = from_gen(choose(0, 9))
     assert isinstance(sut1, AbstractArbitrary)
     sut2 = from_gen(choose(10, 99))
     assert isinstance(sut2, AbstractArbitrary)
 
-    gen1 = sut1.arbitrary()
-    actual1 = gen1.generate()
+    actual1 = sut1.arbitrary()
     assert 0 <= actual1 <= 9
-    gen2 = sut2.arbitrary()
-    actual2 = gen2.generate()
+    actual2 = sut2.arbitrary()
     assert 10 <= actual2 <= 99

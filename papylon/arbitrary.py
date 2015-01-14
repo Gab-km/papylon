@@ -5,19 +5,29 @@ import struct
 import datetime
 
 from papylon.gen import Gen, choose, frequency, map
+from papylon.shrinker import (
+    IntShrinker, FloatShrinker, CharShrinker,
+    DateShrinker, ListShrinker, StrShrinker)
 
 
 class AbstractArbitrary:
     def arbitrary(self):
         raise NotImplementedError("AbstractArbitrary#arbitrary")
 
+    def shrink(self, value):
+        raise NotImplementedError("AbstractArbitrary#shrink")
+
 
 class ArbInteger(AbstractArbitrary):
     def __init__(self):
         self.gen = choose(-1-sys.maxsize, sys.maxsize)
+        self.shrinker = IntShrinker()
 
     def arbitrary(self):
-        return self.gen
+        return self.gen.generate()
+
+    def shrink(self, value):
+        return self.shrinker.shrink(value)
 
 
 class ArbFloat(AbstractArbitrary):
@@ -29,18 +39,26 @@ class ArbFloat(AbstractArbitrary):
                 f = random.randint(0, 0xfffffffffffff)  # fraction
                 yield struct.unpack('d', struct.pack('Q', (s << 63) | (e << 52) | f))[0]
         self.gen = Gen(gen)
+        self.shrinker = FloatShrinker()
 
     def arbitrary(self):
-        return self.gen
+        return self.gen.generate()
+
+    def shrink(self, value):
+        return self.shrinker.shrink(value)
 
 
 class ArbChar(AbstractArbitrary):
     def __init__(self):
         self.gen = frequency([(0xD800, map(chr, choose(0, 0xD800-1))),
                               (0xFFFF-0xDFFF, map(chr, choose(0xdFFF+1, 0xFFFF)))])
+        self.shrinker = CharShrinker()
 
     def arbitrary(self):
-        return self.gen
+        return self.gen.generate()
+
+    def shrink(self, value):
+        return self.shrinker.shrink(value)
 
 
 class ArbDate(AbstractArbitrary):
@@ -67,9 +85,13 @@ class ArbDate(AbstractArbitrary):
                 second = random.randint(0, 59)
                 yield datetime.datetime(year, month, day, hour, minute, second)
         self.gen = Gen(gen)
+        self.shrinker = DateShrinker()
 
     def arbitrary(self):
-        return self.gen
+        return self.gen.generate()
+
+    def shrink(self, value):
+        return self.shrinker.shrink(value)
 
 
 class ArbList(AbstractArbitrary):
@@ -78,12 +100,15 @@ class ArbList(AbstractArbitrary):
             min_length = 0
             while True:
                 length = random.randint(min_length, max_length)
-                arb = arb_type.arbitrary()
-                yield [arb.generate() for i in range(length)]
+                yield [arb_type.arbitrary() for i in range(length)]
         self.gen = Gen(gen)
+        self.shrinker = ListShrinker()
 
     def arbitrary(self):
-        return self.gen
+        return self.gen.generate()
+
+    def shrink(self, value):
+        return self.shrinker.shrink(value)
 
 
 class ArbStr(AbstractArbitrary):
@@ -92,12 +117,15 @@ class ArbStr(AbstractArbitrary):
             min_length = 0
             while True:
                 length = random.randint(min_length, max_length)
-                arb = arb_char().arbitrary()
-                yield "".join(arb.generate() for i in range(length))
+                yield "".join(arb_char().arbitrary() for i in range(length))
         self.gen = Gen(gen)
+        self.shrinker = StrShrinker()
 
     def arbitrary(self):
-        return self.gen
+        return self.gen.generate()
+
+    def shrink(self, value):
+        return self.shrinker.shrink(value)
 
 
 def arb_int():
@@ -129,6 +157,6 @@ def from_gen(gen):
     arb.gen = gen
 
     def new_arbitrary(this):
-        return this.gen
+        return this.gen.generate()
     arb.arbitrary.__func__.__code__ = new_arbitrary.__code__
     return arb

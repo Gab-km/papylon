@@ -12,10 +12,12 @@ class SimplePrinter:
             (count,) = self.result.get()
             print("OK, passed {0} tests.".format(count))
         elif self.result.has_falsified():
+            run_count, inputs, shrunk_number = self.result.get()
+            text = "Falsified after {0} tests ({1} shrinks):\n> {2}".format(run_count, shrunk_number, inputs)
+            print(text)
+        elif self.result.has_error_occurred():
             run_count, inputs, error = self.result.get()
-            text = "Falsified after {0} tests.\n> {1}".format(run_count, inputs)
-            if error is not None:
-                text += "\nwith exception:\n" + str(error)
+            text = "Falsified after {0} tests:\n> {1}\nwith exception:\n{2}".format(run_count, inputs, error)
             print(text)
         elif self.result.has_failed_to_generate():
             (run_count, count_generated) = self.result.get()
@@ -23,7 +25,7 @@ class SimplePrinter:
             print(text.format(run_count, count_generated))
         elif self.result.has_troubled():
             error, ex_traceback = self.result.get()
-            text = "[Papylon] Some exception is raised.\n{0}".format(error.args[0])
+            text = "[Papylon] Some exception is raised:\n{0}".format(error.args[0])
             texts = traceback.format_tb(ex_traceback, limit=10)
             for t in texts:
                 text = text + t
