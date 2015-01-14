@@ -34,10 +34,11 @@ def test_given_falsifiable_property_when_PropChecker_check_the_property_then_ret
 
     sut = PropChecker(100)
     result = sut.check(for_all([arb_int()], lambda x: x != 0 and x == x * (-1)))
-    assert result.has_falsified()
-    run_count, inputs, error = result.get()
+    has_falsified = result.has_falsified()
+    assert has_falsified
+    run_count, inputs, shrunk_number = result.get()
     assert run_count == 1
-    assert error is None
+    assert shrunk_number >= 0
 
 
 def test_given_exceptional_property_when_check_the_property_then_returns_falsified_report_with_exception():
@@ -47,7 +48,7 @@ def test_given_exceptional_property_when_check_the_property_then_returns_falsifi
 
     sut = PropChecker(100)
     result = sut.check(for_all([arb_int()], lambda x: 0/x == x/0))
-    assert result.has_falsified()
+    assert result.has_error_occurred()
     run_count, inputs, error = result.get()
     assert run_count == 1
     assert error is not None

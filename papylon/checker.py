@@ -7,8 +7,9 @@ from papylon.printer import SimplePrinter
 class CheckResult:
     PASSED = 0
     FALSIFIED = 1
-    FAIL_TO_GENERATE = 2
-    TROUBLED = 3
+    ERROR = 2
+    FAIL_TO_GENERATE = 3
+    TROUBLED = 4
 
     def __init__(self, status):
         self.status = status
@@ -21,8 +22,14 @@ class CheckResult:
         return result
 
     @staticmethod
-    def falsify(run_count, inputs, error=None):
+    def falsify(run_count, inputs, shrunk_number):
         result = CheckResult(CheckResult.FALSIFIED)
+        result.result = (run_count, inputs, shrunk_number)
+        return result
+
+    @staticmethod
+    def error(run_count, inputs, error):
+        result = CheckResult(CheckResult.ERROR)
         result.result = (run_count, inputs, error)
         return result
 
@@ -43,6 +50,9 @@ class CheckResult:
 
     def has_falsified(self):
         return self.status == CheckResult.FALSIFIED
+
+    def has_error_occurred(self):
+        return self.status == CheckResult.ERROR
 
     def has_failed_to_generate(self):
         return self.status == CheckResult.FAIL_TO_GENERATE
@@ -66,17 +76,17 @@ class PropChecker:
                 prop_result = prop.execute()
 
                 if prop_result.has_finished():
-                    _, inputs, is_valid = prop_result.finished
+                    _, inputs, is_valid, shrunk_number = prop_result.get()
                     if not is_valid:
-                        return CheckResult.falsify(i+1, inputs)
+                        return CheckResult.falsify(i+1, inputs, shrunk_number)
                 else:
-                    _, inputs, error = prop_result.stopped
+                    _, inputs, error = prop_result.get()
 
                     # failed to generate?
                     if type(error) == StopGeneration:
                         return CheckResult.fail_to_generate(i+1, error.trial_to_generate)
                     else:
-                        return CheckResult.falsify(i+1, inputs, error)
+                        return CheckResult.error(i+1, inputs, error)
 
             return CheckResult.pass_all(self.count)
         except Exception as error:
