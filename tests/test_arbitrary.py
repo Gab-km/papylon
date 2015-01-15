@@ -160,7 +160,7 @@ def test_arb_str_returns_ArbStr_instance():
     assert isinstance(actual, ArbStr)
 
 
-def test_from_gen_returns_AbstractArbitrary_instance_whose_arbitrary_returns_given_Gen_instance():
+def test_from_gen_returns_AbstractArbitrary_instance_with_given_Gen_instance():
     from papylon.gen import choose
     from papylon.arbitrary import from_gen, AbstractArbitrary
 
@@ -169,7 +169,29 @@ def test_from_gen_returns_AbstractArbitrary_instance_whose_arbitrary_returns_giv
     sut2 = from_gen(choose(10, 99))
     assert isinstance(sut2, AbstractArbitrary)
 
-    actual1 = sut1.arbitrary()
-    assert 0 <= actual1 <= 9
-    actual2 = sut2.arbitrary()
-    assert 10 <= actual2 <= 99
+    generated1 = sut1.arbitrary()
+    assert 0 <= generated1 <= 9
+    shrunk1 = list(sut1.shrink(5))
+    assert shrunk1 == []
+    generated1 = sut2.arbitrary()
+    assert 10 <= generated1 <= 99
+    shrunk2 = list(sut2.shrink(50))
+    assert shrunk2 == []
+
+
+def test_from_gen_shrink_returns_AbstractArbitrary_instance_with_given_Gen_instance_and_shrinker():
+    from papylon.gen import choose
+    from papylon.shrinker import AbstractShrinker
+    from papylon.arbitrary import from_gen_shrink, AbstractArbitrary
+
+    class OriginalShrinker(AbstractShrinker):
+        def shrink(self, value):
+            return iter([0, 1, -1])
+    shrinker = OriginalShrinker()
+    sut = from_gen_shrink(choose(0, 9), shrinker)
+    assert isinstance(sut, AbstractArbitrary)
+
+    generated = sut.arbitrary()
+    assert 0 <= generated <= 9
+    shrunk = list(sut.shrink(5))
+    assert shrunk == [0, 1, -1]
