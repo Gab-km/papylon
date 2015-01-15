@@ -159,4 +159,24 @@ def from_gen(gen):
     def new_arbitrary(this):
         return this.gen.generate()
     arb.arbitrary.__func__.__code__ = new_arbitrary.__code__
+
+    def new_shrink(this, value):
+        return iter([])
+    arb.shrink.__func__.__code__ = new_shrink.__code__
+    return arb
+
+
+def from_gen_shrink(gen, shrinker):
+    arb = AbstractArbitrary()
+    arb.gen = gen
+    arb.shrinker = shrinker
+
+    def new_arbitrary(this):
+        return this.gen.generate()
+    arb.arbitrary.__func__.__code__ = new_arbitrary.__code__
+
+    def new_shrink(this, value):
+        return this.shrinker.shrink(value)
+    arb.shrink.__func__.__code__ = new_shrink.__code__
+
     return arb

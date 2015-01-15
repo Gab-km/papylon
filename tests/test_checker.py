@@ -27,15 +27,14 @@ def test_given_property_which_fails_to_generate_when_PropChecker_check_it_then_r
     assert trial_to_generate == 100
 
 
-def test_given_falsifiable_property_when_PropChecker_check_the_property_then_returns_faisified_report():
+def test_given_falsifiable_property_when_PropChecker_check_the_property_then_returns_falsified_report():
     from papylon.checker import PropChecker
     from papylon.prop import for_all
     from papylon.arbitrary import arb_int
 
     sut = PropChecker(100)
     result = sut.check(for_all([arb_int()], lambda x: x != 0 and x == x * (-1)))
-    has_falsified = result.has_falsified()
-    assert has_falsified
+    assert result.has_falsified()
     run_count, inputs, shrunk_number = result.get()
     assert run_count == 1
     assert shrunk_number >= 0
