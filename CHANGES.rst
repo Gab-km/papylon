@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.5 (2015-01-16)
+----------------
+
+* implement the shrinking system
+* add ``from_gen_shrink`` function into ``papylon.arbitrary`` module
+
 0.4 (2014-12-23)
 ----------------
 

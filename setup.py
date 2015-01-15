@@ -21,11 +21,11 @@ tests_require = [
 ]
 
 setup(name='papylon',
-      version='0.4.1',
+      version='0.5',
       description='Random testing for Python',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
-          "Development Status :: 3 - Alpha",
+          "Development Status :: 4 - Beta",
           "Intended Audience :: Developers",
           "License :: OSI Approved :: MIT License",
           "Programming Language :: Python",
