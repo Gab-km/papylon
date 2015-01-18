@@ -91,3 +91,15 @@ def test_when_check_a_valid_property_then_it_should_run_well(capsys):
     check(for_all([arb_int()], lambda x: x + 1 > x))
     out, _ = capsys.readouterr()
     assert out == "OK, passed 100 tests.\n"
+
+
+def test_when_check_and_assert_an_invalid_property_then_raise_AssertionError():
+    from papylon.checker import check_and_assert
+    from papylon.prop import for_all
+    from papylon.arbitrary import arb_float
+
+    try:
+        check_and_assert(for_all([arb_float()], lambda x: x + 1.0 == x))
+        assert False
+    except AssertionError:
+        assert True

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from papylon.gen import StopGeneration
-from papylon.printer import SimplePrinter
+from papylon.utils import print_result, assert_result
 
 
 class CheckResult:
@@ -94,8 +94,13 @@ class PropChecker:
             return CheckResult.trouble(error, ex_traceback)
 
 
-def check(prop, count=100, printer_class=SimplePrinter):
+def check(prop, count=100, printer=print_result):
     checker = PropChecker(count=count)
     result = checker.check(prop)
-    printer = printer_class(result)
-    printer.print_result()
+    printer(result)
+
+
+def check_and_assert(prop, count=100, asserter=assert_result):
+    checker = PropChecker(count=count)
+    result = checker.check(prop)
+    asserter(result)
