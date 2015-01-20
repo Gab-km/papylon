@@ -55,7 +55,9 @@ class ArbChar(AbstractArbitrary):
         self.shrinker = CharShrinker()
 
     def arbitrary(self):
-        return self.gen.generate()
+        # self.gen generates a mapped Gen instance
+        gen = self.gen.generate()
+        return gen.generate()
 
     def shrink(self, value):
         return self.shrinker.shrink(value)
@@ -163,6 +165,7 @@ def from_gen(gen):
     def new_shrink(this, value):
         return iter([])
     arb.shrink.__func__.__code__ = new_shrink.__code__
+
     return arb
 
 

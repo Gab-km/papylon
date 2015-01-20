@@ -33,25 +33,11 @@ def test_Gen_such_that_returns_no_hitted_Gen_and_raise_StopGeneration_when_gener
 
 
 def test_when_one_of_takes_a_Gen_list_then_returns_one_of_the_Gen_instance_in_the_list():
-    from papylon.gen import Gen, one_of
+    from papylon.gen import one_of
 
-    def generate_1():
-        while True:
-            yield 1
-    gen_1 = Gen(generate_1)
-
-    def generate_2():
-        while True:
-            yield 2
-    gen_2 = Gen(generate_2)
-
-    def generate_3():
-        while True:
-            yield 3
-    gen_3 = Gen(generate_3)
-    sut = one_of([gen_1, gen_2, gen_3])
+    sut = one_of([1, 4, 9])
     actual = sut.generate()
-    assert actual in [1, 2, 3]
+    assert actual in [1, 4, 9]
 
 
 def test_when_choose_takes_a_string_argument_as_min_value_then_raises_TypeError():
@@ -126,28 +112,13 @@ def test_when_choose_takes_arguments_both_of_which_are_int_then_returns_Gen_inst
 
 
 def test_when_frequency_runs_10000_times_then_its_choices_should_be_satisfied_with_accuracy_ge94_percents():
-    from papylon.gen import Gen, frequency
+    from papylon.gen import frequency
 
-    def generate_1():
-        while True:
-            yield 1
-    gen_1 = Gen(generate_1)
-
-    def generate_10():
-        while True:
-            yield 10
-    gen_10 = Gen(generate_10)
-
-    def generate_100():
-        while True:
-            yield 100
-    gen_100 = Gen(generate_100)
-
-    weighted_gens = [(5, gen_1), (3, gen_10), (2, gen_100)]
+    weighted_values = [(5, 1), (3, 10), (2, 100)]
     count_1, count_10, count_100 = 0, 0, 0
     parameter = 10000
     for i in range(parameter):
-        sut = frequency(weighted_gens)
+        sut = frequency(weighted_values)
         value = sut.generate()
         if value == 1:
             count_1 += 1
