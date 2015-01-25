@@ -3,22 +3,34 @@ import sys
 import traceback
 
 
+def pluralize(singular, plural, number):
+    assert number >= 0   # contract
+    return "{0} {1}".format(number, singular if number == 1 else plural)
+
+
+def pluralize_test(number):
+    return pluralize("test", "tests", number)
+
+
 def convert_to_outputs(result):
     if result.has_passed():
         (count,) = result.get()
-        return "OK, passed {0} tests.".format(count), True, sys.stdout
+        return "OK, passed {0}.".format(pluralize_test(count)), True, sys.stdout
     elif result.has_falsified():
         run_count, inputs, shrunk_number = result.get()
-        text = "Falsified after {0} tests ({1} shrinks):\n> {2}".format(run_count, shrunk_number, inputs)
+        text = "Falsified after {0} ({1}):\n> {2}".format(
+            pluralize_test(run_count), pluralize("shrink", "shrinks", shrunk_number), inputs)
         return text, False, sys.stdout
     elif result.has_error_occurred():
         run_count, inputs, error = result.get()
-        text = "Falsified after {0} tests:\n> {1}\nwith exception:\n{2}".format(run_count, inputs, error)
+        text = "Falsified after {0}:\n> {1}\nwith exception:\n{2}".format(
+            pluralize_test(run_count), inputs, error)
         return text, False, sys.stdout
     elif result.has_failed_to_generate():
         run_count, count_generated = result.get()
-        text = "Gave up after only {0} tests. {1} arguments failed to be generated."
-        return text.format(run_count, count_generated), False, sys.stdout
+        text = "Gave up after only {0}. {1} failed to be generated.".format(
+            pluralize_test(run_count), pluralize("argument", "arguments", count_generated))
+        return text, False, sys.stdout
     elif result.has_troubled():
         error, ex_traceback = result.get()
         text = "[Papylon] Some exception is raised:\n{0}".format(error.args[0])
