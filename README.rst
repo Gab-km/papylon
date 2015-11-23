@@ -31,7 +31,7 @@ If a property failed, Papylon reports which arbitrary(s) made it failed:
 
   import math
 
-  p2 = for_all([arb_int], lambda n: math.sqrt(n*n) == n)
+  p2 = for_all([arb_int()], lambda n: math.sqrt(n*n) == n)
   check(p2)
 
 .. code-block:: text
