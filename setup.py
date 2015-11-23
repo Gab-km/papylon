@@ -21,7 +21,7 @@ tests_require = [
 ]
 
 setup(name='papylon',
-      version='0.5',
+      version='0.6.1',
       description='Random testing for Python',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
@@ -31,6 +31,7 @@ setup(name='papylon',
           "Programming Language :: Python",
           "Programming Language :: Python :: 3.3",
           "Programming Language :: Python :: 3.4",
+          "Programming Language :: Python :: 3.5",
           "Topic :: Software Development :: Libraries",
           "Topic :: Software Development :: Testing",
           "Topic :: Utilities"

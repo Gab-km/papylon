@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.6 (2015-11-23)
+----------------
+
+* add ``check_and_assert`` function into ``papylon.checker`` module
+* add ``Properties`` class into ``papylon.prop`` module
+* add ``check_all`` function into ``papylon.checker`` module
+* modify ``papylon.gen`` module to use generator
+
 0.5 (2015-01-16)
 ----------------
 
