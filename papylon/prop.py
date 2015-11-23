@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
 
 
 class PropResult:
@@ -131,19 +132,13 @@ def for_all(arbs, func):
     return for_all_shrink(arbs, func)
 
 
-# def for_all_as_method(arbitraries):
-#     def make_prop(func_to_check):
-#         def inner(target, *args):
-#             def func_without_target(*a):
-#                 return func_to_check(target, *a)
-#             return Prop(arbitraries, func_without_target)
-#         return inner
-#     return make_prop
+class Properties:
+    def __init__(self, group_name):
+        self.group_name = group_name
+        self.__properties = OrderedDict()
 
+    def add(self, prop_name, prop):
+        self.__properties[prop_name] = prop
 
-# def for_all(arbitraries):
-#     def make_prop(func_to_check):
-#         def inner(*args):
-#             return Prop(arbitraries, func_to_check)
-#         return inner
-#     return make_prop
+    def properties(self):
+        return self.__properties.items()

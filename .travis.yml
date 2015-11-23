@@ -3,9 +3,7 @@ language: python
 python:
   - 3.3
   - 3.4
-
-env:
-  - PYTHONPATH=$PYTHONPATH:.
+  - 3.5
 
 install:
   - pip install pytest
