@@ -47,6 +47,11 @@ def print_result(result):
     print(text, file=file_object)
 
 
+def print_result_in_group(result, group_name, prop_name):
+    text, _, file_object = convert_to_outputs(result)
+    print(group_name + '.' + prop_name + ' -> ' + text, file=file_object)
+
+
 def assert_result(result):
     text, is_proved, _ = convert_to_outputs(result)
     if not is_proved:

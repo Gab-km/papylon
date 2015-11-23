@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from papylon.gen import StopGeneration
-from papylon.utils import print_result, assert_result
+from papylon.utils import print_result, print_result_in_group, assert_result
 
 
 class CheckResult:
@@ -104,3 +104,11 @@ def check_and_assert(prop, count=100, asserter=assert_result):
     checker = PropChecker(count=count)
     result = checker.check(prop)
     asserter(result)
+
+
+def check_all(properties, count=100, printer=print_result_in_group):
+    checker = PropChecker(count=count)
+    group_name = properties.group_name
+    for prop_name, prop in properties.properties():
+        result = checker.check(prop)
+        printer(result, group_name, prop_name)

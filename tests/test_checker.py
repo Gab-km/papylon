@@ -103,3 +103,44 @@ def test_when_check_and_assert_an_invalid_property_then_raise_AssertionError():
         assert False
     except AssertionError:
         assert True
+
+
+def test_when_check_all_a_Properties_instance_then_check_all_properties(capsys):
+    from papylon.checker import check_all
+    from papylon.prop import for_all, Properties
+    from papylon.arbitrary import arb_int, arb_list
+
+    p1 = for_all([arb_list(arb_int(), max_length=20), arb_list(arb_int(), max_length=20)],
+                 lambda xs, ys: len(xs) + len(ys) == len(xs + ys))
+    props = Properties("List propositions")
+    props.add("length proposition", p1)
+    props.add("wrong proposition",
+              for_all([arb_list(arb_int(), max_length=20)], lambda xs: len(xs) < 0))
+    check_all(props)
+    out, _ = capsys.readouterr()
+    out_lines = out.splitlines()
+    assert len(out_lines) == 3
+    assert out_lines[0] == "List propositions.length proposition -> OK, passed 100 tests."
+    expected_failing = "List propositions.wrong proposition -> Falsified after 1 test "
+    assert out_lines[1][:len(expected_failing)] == expected_failing
+    assert out_lines[2] == "> [[]]"  # Is this assertion fragile?
+
+
+def test_when_check_all_properties_then_checks_it_not_in_lexical_order_but_of_registration(capsys):
+    from papylon.checker import check_all
+    from papylon.prop import for_all, Properties
+    from papylon.arbitrary import arb_int, arb_list
+
+    p1 = for_all([arb_list(arb_int(), max_length=20)],
+                 lambda x: list(reversed(list(reversed(x)))) == x)
+    props = Properties("List propositions")
+    props.add("reverse cyclic proposition", p1)
+    p2 = for_all([arb_list(arb_int(), max_length=20), arb_list(arb_int(), max_length=20)],
+                 lambda xs, ys: len(xs) + len(ys) == len(xs + ys))
+    props.add("length proposition", p2)
+    check_all(props)
+    out, _ = capsys.readouterr()
+    out_lines = out.splitlines()
+    assert len(out_lines) == 2
+    assert out_lines[0] == "List propositions.reverse cyclic proposition -> OK, passed 100 tests."
+    assert out_lines[1] == "List propositions.length proposition -> OK, passed 100 tests."
