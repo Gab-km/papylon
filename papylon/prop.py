@@ -65,9 +65,9 @@ class PropExecutorWithShrink(PropExecutor):
     def execute_shrinker(self, inputs):
         shrunk_number = 0
         last_inputs = inputs.copy()
-        shrinkings = []
         new_inputs = []
         try:
+            shrinkings = []
             for _ in range(self.max_shrinks):
                 zipped = zip(self.arbs, last_inputs)
                 shrinkings.clear()

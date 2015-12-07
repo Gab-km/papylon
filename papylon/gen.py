@@ -13,23 +13,23 @@ class StopGeneration(StopIteration):
 class Gen:
     DEFAULT_TRIAL = 100
 
-    def __init__(self, gen, mapper=lambda x: x, pred=lambda x: True, trial=DEFAULT_TRIAL):
+    def __init__(self, gen, mapper=lambda x: x, predicate=lambda x: True, trial=DEFAULT_TRIAL):
         self.gen = gen()
         self.mapper = mapper
-        self.pred = pred
+        self.predicate = predicate
         self.trial = trial
 
     def generate(self):
         for i, value in enumerate(self.gen):
             mapped = self.mapper(value)
-            if self.pred(mapped):
+            if self.predicate(mapped):
                 return mapped
 
             if i >= self.trial:
                 raise StopGeneration(i)
 
-    def such_that(self, pred, trial=DEFAULT_TRIAL):
-        return Gen(lambda: self.gen, pred=pred, trial=trial)
+    def such_that(self, predicate, trial=DEFAULT_TRIAL):
+        return Gen(lambda: self.gen, predicate=predicate, trial=trial)
 
 
 def one_of(values):
@@ -40,7 +40,7 @@ def choose(min_value, max_value):
     min_value_type = type(min_value)
     max_value_type = type(max_value)
     if min_value_type not in [int, float] or max_value_type not in [int, float]:
-        raise TypeError("`gen.choose(min_value, max_value)` should take 2 arguments" + "as `int` or `float`.")
+        raise TypeError("`gen.choose(min_value, max_value)` should take 2 arguments as `int` or `float`.")
 
     if min_value >= max_value:
         raise ValueError("`gen.choose(min_value, max_value)` should take 2 arguments" +

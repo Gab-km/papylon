@@ -101,7 +101,7 @@ class ArbList(AbstractArbitrary):
             min_length = 0
             while True:
                 length = random.randint(min_length, max_length)
-                yield [arb_type.arbitrary() for i in range(length)]
+                yield [arb_type.arbitrary() for _ in range(length)]
         self.gen = Gen(gen)
         self.shrinker = ListShrinker()
 
@@ -118,7 +118,7 @@ class ArbStr(AbstractArbitrary):
             min_length = 0
             while True:
                 length = random.randint(min_length, max_length)
-                yield "".join(arb_char().arbitrary() for i in range(length))
+                yield "".join(arb_char().arbitrary() for _ in range(length))
         self.gen = Gen(gen)
         self.shrinker = StrShrinker()
 
