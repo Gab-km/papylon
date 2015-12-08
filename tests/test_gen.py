@@ -33,9 +33,9 @@ def test_Gen_such_that_returns_no_hitted_Gen_and_raise_StopGeneration_when_gener
 
 
 def test_when_one_of_takes_a_Gen_list_then_returns_one_of_the_Gen_instance_in_the_list():
-    from papylon.gen import one_of
+    from papylon.gen import one_of, constant
 
-    sut = one_of([1, 4, 9])
+    sut = one_of(list(map(constant, [1, 4, 9])))
     actual = sut.generate()
     assert actual in [1, 4, 9]
 
@@ -112,13 +112,13 @@ def test_when_choose_takes_arguments_both_of_which_are_int_then_returns_Gen_inst
 
 
 def test_when_frequency_runs_10000_times_then_its_choices_should_be_satisfied_with_accuracy_ge94_percents():
-    from papylon.gen import frequency
+    from papylon.gen import frequency, constant
 
-    weighted_values = [(5, 1), (3, 10), (2, 100)]
+    weighted_gens = [(5, constant(1)), (3, constant(10)), (2, constant(100))]
     count_1, count_10, count_100 = 0, 0, 0
     parameter = 10000
     for i in range(parameter):
-        sut = frequency(weighted_values)
+        sut = frequency(weighted_gens)
         value = sut.generate()
         if value == 1:
             count_1 += 1
