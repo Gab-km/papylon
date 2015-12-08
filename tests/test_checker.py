@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def test_given_count_as_100_when_PropChecker_check_a_propety_then_the_property_runs_100_times():
     from papylon.checker import PropChecker
     from papylon.prop import for_all

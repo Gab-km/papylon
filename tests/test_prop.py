@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def test_when_Prop_execute_runs_right_property_then_succeeds():
     from papylon.prop import Prop, PropExecutorWithoutShrink
     from papylon.arbitrary import arb_int

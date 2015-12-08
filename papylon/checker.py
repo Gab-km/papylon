@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import sys
 from papylon.gen import StopGeneration
 from papylon.utils import print_result, print_result_in_group, assert_result

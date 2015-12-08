@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def test_gen_generate_returns_generated_value():
     from papylon.gen import Gen
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def test_ArbInteger_arbitrary_returns_integer():
     from papylon.arbitrary import ArbInteger
     import sys

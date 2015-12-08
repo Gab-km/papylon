@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def test_when_IntShrinker_shrink_takes_positive_value_then_returns_a_iterable_with_values_smaller_than_arg():
     from papylon.shrinker import IntShrinker
 

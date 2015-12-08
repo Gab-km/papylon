@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def test_when_pluralize_takes_0_as_number_then_returns_plural_form():
     from papylon.utils import pluralize
 
