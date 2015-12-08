@@ -33,10 +33,7 @@ class Gen:
 
 
 def one_of(values):
-    def gen():
-        while True:
-            yield random.choice(values)
-    return Gen(gen)
+    return random.choice(values)
 
 
 def choose(min_value, max_value):
@@ -64,13 +61,10 @@ def choose(min_value, max_value):
 def frequency(weighted_values):
     """ref: https://docs.python.org/3.4/library/random.html#examples-and-recipes"""
 
-    def gen():
-        while True:
-            weights, values = zip(*weighted_values)
-            cumdist = list(itertools.accumulate(weights))
-            x = random.random() * cumdist[-1]
-            yield values[bisect.bisect(cumdist, x)]
-    return Gen(gen)
+    weights, gens = zip(*weighted_values)
+    cumdist = list(itertools.accumulate(weights))
+    x = random.random() * cumdist[-1]
+    return gens[bisect.bisect(cumdist, x)]
 
 
 def map(f, gen):

@@ -56,8 +56,7 @@ class ArbChar(AbstractArbitrary):
 
     def arbitrary(self):
         # self.gen generates a mapped Gen instance
-        gen = self.gen.generate()
-        return gen.generate()
+        return self.gen.generate()
 
     def shrink(self, value):
         return self.shrinker.shrink(value)
