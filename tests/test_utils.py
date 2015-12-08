@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def test_when_pluralize_takes_0_as_number_then_returns_plural_form():
     from papylon.utils import pluralize
 
@@ -89,26 +88,26 @@ def test_given_error_result_with_count_1_when_convert_to_output_then_return_erro
     assert not is_ok
 
 
-def test_given_generation_failure_result_with_1_argument_when_convert_to_output_then_returns_generation_failure_messabe_with_single_argument():
-    from papylon.utils import convert_to_outputs
-    from papylon.checker import CheckResult
+class TestGivenGenerationFailureResult:
+    def test_with_1_argument_when_convert_to_output_then_returns_generation_failure_message_with_single_argument(self):
+        from papylon.utils import convert_to_outputs
+        from papylon.checker import CheckResult
 
-    result = CheckResult.fail_to_generate(66, 1)
-    message, is_ok, _ = convert_to_outputs(result)
-    expected = "Gave up after only 66 tests. 1 argument failed to be generated."
-    assert message == expected
-    assert not is_ok
+        result = CheckResult.fail_to_generate(66, 1)
+        message, is_ok, _ = convert_to_outputs(result)
+        expected = "Gave up after only 66 tests. 1 argument failed to be generated."
+        assert message == expected
+        assert not is_ok
 
+    def test_with_count_1_when_convert_to_output_then_returns_generation_failure_message_with_single_count(self):
+        from papylon.utils import convert_to_outputs
+        from papylon.checker import CheckResult
 
-def test_given_generation_failure_result_with_count_1_when_convert_to_output_then_returns_generation_failure_message_with_single_count():
-    from papylon.utils import convert_to_outputs
-    from papylon.checker import CheckResult
-
-    result = CheckResult.fail_to_generate(1, 100)
-    message, is_ok, _ = convert_to_outputs(result)
-    expected = "Gave up after only 1 test. 100 arguments failed to be generated."
-    assert message == expected
-    assert not is_ok
+        result = CheckResult.fail_to_generate(1, 100)
+        message, is_ok, _ = convert_to_outputs(result)
+        expected = "Gave up after only 1 test. 100 arguments failed to be generated."
+        assert message == expected
+        assert not is_ok
 
 
 def test_given_troubled_result_when_convert_to_output_then_returns_troubled_message():
@@ -157,7 +156,7 @@ def test_given_passed_result_when_assert_result_then_does_not_raise_errors():
         assert False
 
 
-def test_given_falsified_result_without_error_when_assert_result_then_raise_AssertionError():
+def test_given_falsified_result_without_error_when_assert_result_then_raise_assertion_error():
     from papylon.utils import assert_result
     from papylon.checker import CheckResult
 
@@ -169,7 +168,7 @@ def test_given_falsified_result_without_error_when_assert_result_then_raise_Asse
         assert str(aes) == "Falsified after 5 tests (0 shrinks):\n> ['test']"
 
 
-def test_given_falsified_result_with_error_when_assert_result_then_raise_AssertionError():
+def test_given_falsified_result_with_error_when_assert_result_then_raise_assertion_error():
     from papylon.utils import assert_result
     from papylon.checker import CheckResult
 
@@ -181,7 +180,7 @@ def test_given_falsified_result_with_error_when_assert_result_then_raise_Asserti
         assert str(aes) == "Falsified after 6 tests:\n> ['ham', 'egg']\nwith exception:\nSPAM!"
 
 
-def test_given_argument_failed_to_be_generated_result_when_assert_result_then_raise_AssertionError():
+def test_given_argument_failed_to_be_generated_result_when_assert_result_then_raise_assertion_error():
     from papylon.utils import assert_result
     from papylon.checker import CheckResult
 
@@ -193,7 +192,7 @@ def test_given_argument_failed_to_be_generated_result_when_assert_result_then_ra
         assert str(aes) == "Gave up after only 66 tests. 100 arguments failed to be generated."
 
 
-def test_given_troubled_result_when_assert_result_then_raise_AssertionError():
+def test_given_troubled_result_when_assert_result_then_raise_assertion_error():
     from papylon.utils import assert_result
     from papylon.checker import CheckResult
 
@@ -205,7 +204,7 @@ def test_given_troubled_result_when_assert_result_then_raise_AssertionError():
         assert str(aes) == "[Papylon] Some exception is raised:\nholy grail"
 
 
-def test_given_unknown_result_when_assert_result_then_raise_AssertionError():
+def test_given_unknown_result_when_assert_result_then_raise_assertion_error():
     from papylon.utils import assert_result
     from papylon.checker import CheckResult
 

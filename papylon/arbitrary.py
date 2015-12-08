@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 import sys
 import random
 import struct
 import datetime
 
-from papylon.gen import Gen, choose, frequency, map
+from papylon.gen import Gen, choose, frequency
 from papylon.shrinker import (
     IntShrinker, FloatShrinker, CharShrinker,
     DateShrinker, ListShrinker, StrShrinker)
@@ -50,8 +49,8 @@ class ArbFloat(AbstractArbitrary):
 
 class ArbChar(AbstractArbitrary):
     def __init__(self):
-        self.gen = frequency([(0xD800, map(chr, choose(0, 0xD800-1))),
-                              (0xFFFF-0xDFFF, map(chr, choose(0xdFFF+1, 0xFFFF)))])
+        self.gen = frequency([(0xD800, choose(0, 0xD800-1).map(chr)),
+                              (0xFFFF-0xDFFF, choose(0xdFFF+1, 0xFFFF).map(chr))])
         self.shrinker = CharShrinker()
 
     def arbitrary(self):
@@ -101,7 +100,7 @@ class ArbList(AbstractArbitrary):
             min_length = 0
             while True:
                 length = random.randint(min_length, max_length)
-                yield [arb_type.arbitrary() for i in range(length)]
+                yield [arb_type.arbitrary() for _ in range(length)]
         self.gen = Gen(gen)
         self.shrinker = ListShrinker()
 
@@ -118,7 +117,7 @@ class ArbStr(AbstractArbitrary):
             min_length = 0
             while True:
                 length = random.randint(min_length, max_length)
-                yield "".join(arb_char().arbitrary() for i in range(length))
+                yield "".join(arb_char().arbitrary() for _ in range(length))
         self.gen = Gen(gen)
         self.shrinker = StrShrinker()
 

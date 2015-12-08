@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-def test_when_Prop_execute_runs_right_property_then_succeeds():
+def test_when_prop_execute_runs_right_property_then_succeeds():
     from papylon.prop import Prop, PropExecutorWithoutShrink
     from papylon.arbitrary import arb_int
 
@@ -11,7 +10,7 @@ def test_when_Prop_execute_runs_right_property_then_succeeds():
     assert not actual.has_stopped()
 
 
-def test_given_PropExecutorWithShrink_then_execute_shrink_runs_wrong_property_then_finishes_in_1_second():
+def test_given_prop_executor_with_shrink_then_execute_shrink_runs_wrong_property_then_finishes_in_1_second():
     from papylon.prop import PropExecutorWithShrink
     from papylon.arbitrary import arb_int
     import time
@@ -28,7 +27,7 @@ def test_given_PropExecutorWithShrink_then_execute_shrink_runs_wrong_property_th
     assert elapsed <= 1.0
 
 
-def test_given_PropExecutorWithShrink_then_execute_shrink_runs_wrong_property_then_shrinks_10_times():
+def test_given_prop_executor_with_shrink_then_execute_shrink_runs_wrong_property_then_shrinks_10_times():
     from papylon.prop import PropExecutorWithShrink
     from papylon.arbitrary import arb_int
 
@@ -41,7 +40,7 @@ def test_given_PropExecutorWithShrink_then_execute_shrink_runs_wrong_property_th
     assert not actual.has_stopped()
 
 
-def test_when_Prop_execute_runs_wrong_property_then_fails():
+def test_when_prop_execute_runs_wrong_property_then_fails():
     from papylon.prop import Prop, PropExecutorWithoutShrink
     from papylon.arbitrary import arb_int
 
@@ -54,7 +53,7 @@ def test_when_Prop_execute_runs_wrong_property_then_fails():
     assert not actual.has_stopped()
 
 
-def test_given_a_property_which_fails_to_generate_when_Prop_execute_it_then_should_be_stopped_with_StopGeneration():
+def test_given_a_property_which_fails_to_generate_when_prop_execute_it_then_should_be_stopped_with_stop_generation():
     from papylon.prop import Prop, PropExecutorWithoutShrink
     from papylon.arbitrary import from_gen
     from papylon.gen import choose, StopGeneration
@@ -69,7 +68,7 @@ def test_given_a_property_which_fails_to_generate_when_Prop_execute_it_then_shou
     assert type(error) == StopGeneration
 
 
-def test_given_a_property_which_will_raise_exception_when_Prop_execute_runs_the_property_then_the_prop_should_be_stopped():
+def test_given_a_property_which_will_raise_exception_when_execute_runs_the_property_then_the_prop_should_be_stopped():
     from papylon.prop import Prop, PropExecutorWithoutShrink
     from papylon.arbitrary import arb_int
 
@@ -81,7 +80,7 @@ def test_given_a_property_which_will_raise_exception_when_Prop_execute_runs_the_
     assert type(error) == ZeroDivisionError
 
 
-def test_when_Prop_from_for_all_function_act_as_a_property():
+def test_when_prop_from_for_all_function_act_as_a_property():
     from papylon.prop import for_all
     from papylon.arbitrary import arb_float
 
@@ -93,7 +92,7 @@ def test_when_Prop_from_for_all_function_act_as_a_property():
     assert not actual.has_stopped()
 
 
-def test_when_Prop_takes_Arbitrary_instance_with_from_gen_then_prop_can_execute_correctly():
+def test_when_prop_takes_arbitrary_instance_with_from_gen_then_prop_can_execute_correctly():
     from papylon.prop import for_all
     from papylon.arbitrary import from_gen
     from papylon.gen import choose

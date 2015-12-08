@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import sys
 from papylon.gen import StopGeneration
 from papylon.utils import print_result, print_result_in_group, assert_result
@@ -109,6 +108,7 @@ def check_and_assert(prop, count=100, asserter=assert_result):
 def check_all(properties, count=100, printer=print_result_in_group):
     checker = PropChecker(count=count)
     group_name = properties.group_name
-    for prop_name, prop in properties.properties():
+    ps = properties.properties()
+    for prop_name, prop in ps:
         result = checker.check(prop)
         printer(result, group_name, prop_name)

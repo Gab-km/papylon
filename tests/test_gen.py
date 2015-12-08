@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def test_gen_generate_returns_generated_value():
     from papylon.gen import Gen
 
@@ -10,7 +9,7 @@ def test_gen_generate_returns_generated_value():
     assert actual == 1
 
 
-def test_Gen_such_that_returns_new_ranged_Gen_instance():
+def test_such_that_returns_new_ranged_gen_instance():
     from papylon.gen import choose
 
     gen = choose(-20, 20)
@@ -19,7 +18,7 @@ def test_Gen_such_that_returns_new_ranged_Gen_instance():
     assert 0 <= actual <= 20
 
 
-def test_Gen_such_that_returns_no_hitted_Gen_and_raise_StopGeneration_when_generate_called():
+def test_such_that_returns_no_hit_gen_and_raise_stop_generation_when_generate_called():
     from papylon.gen import choose, StopGeneration
 
     gen = choose(-30, 30)
@@ -32,7 +31,7 @@ def test_Gen_such_that_returns_no_hitted_Gen_and_raise_StopGeneration_when_gener
     assert False
 
 
-def test_when_one_of_takes_a_Gen_list_then_returns_one_of_the_Gen_instance_in_the_list():
+def test_when_one_of_takes_a_gen_list_then_returns_one_of_the_gen_instance_in_the_list():
     from papylon.gen import one_of, constant
 
     sut = one_of(list(map(constant, [1, 4, 9])))
@@ -40,7 +39,7 @@ def test_when_one_of_takes_a_Gen_list_then_returns_one_of_the_Gen_instance_in_th
     assert actual in [1, 4, 9]
 
 
-def test_when_choose_takes_a_string_argument_as_min_value_then_raises_TypeError():
+def test_when_choose_takes_a_string_argument_as_min_value_then_raises_type_error():
     from papylon.gen import choose
 
     try:
@@ -51,7 +50,7 @@ def test_when_choose_takes_a_string_argument_as_min_value_then_raises_TypeError(
     assert False
 
 
-def test_when_choose_takes_a_list_argument_as_max_value_then_raises_TypeError():
+def test_when_choose_takes_a_list_argument_as_max_value_then_raises_type_error():
     from papylon.gen import choose
 
     try:
@@ -62,7 +61,7 @@ def test_when_choose_takes_a_list_argument_as_max_value_then_raises_TypeError():
     assert False
 
 
-def test_when_choose_takes_arguments_where_min_value_is_greater_than_max_value_then_raises_ValueError():
+def test_when_choose_takes_arguments_where_min_value_is_greater_than_max_value_then_raises_value_error():
     from papylon.gen import choose
 
     try:
@@ -73,7 +72,7 @@ def test_when_choose_takes_arguments_where_min_value_is_greater_than_max_value_t
     assert False
 
 
-def test_when_choose_takes_arguments_where_min_value_is_equal_to_max_value_then_raises_ValueError():
+def test_when_choose_takes_arguments_where_min_value_is_equal_to_max_value_then_raises_value_error():
     from papylon.gen import choose
 
     try:
@@ -84,7 +83,7 @@ def test_when_choose_takes_arguments_where_min_value_is_equal_to_max_value_then_
     assert False
 
 
-def test_when_choose_takes_arguments_where_min_value_is_float_then_returns_Gen_instance_which_generates_float_value():
+def test_when_choose_takes_arguments_where_min_value_is_float_then_returns_gen_instance_which_generates_float_value():
     from papylon.gen import choose
 
     sut = choose(-2.0, 2)
@@ -93,7 +92,7 @@ def test_when_choose_takes_arguments_where_min_value_is_float_then_returns_Gen_i
     assert -2.0 <= actual <= 2.0
 
 
-def test_when_choose_takes_arguments_where_max_value_is_float_then_returns_Gen_instance_which_generates_float_value():
+def test_when_choose_takes_arguments_where_max_value_is_float_then_returns_gen_instance_which_generates_float_value():
     from papylon.gen import choose
 
     sut = choose(-5, 10.0)
@@ -102,7 +101,7 @@ def test_when_choose_takes_arguments_where_max_value_is_float_then_returns_Gen_i
     assert -5.0 <= actual <= 10.0
 
 
-def test_when_choose_takes_arguments_both_of_which_are_int_then_returns_Gen_instance_which_generates_int_value():
+def test_when_choose_takes_arguments_both_of_which_are_int_then_returns_gen_instance_which_generates_int_value():
     from papylon.gen import choose
 
     sut = choose(-50, 50)
@@ -138,11 +137,11 @@ def test_when_frequency_runs_10000_times_then_its_choices_should_be_satisfied_wi
     assert assert_frequency(count_100, parameter, 0.2, assuring_accuracy)
 
 
-def test_map_should_create_new_Gen_instance_with_mapper_function():
-    from papylon.gen import choose, map
+def test_map_should_create_new_gen_instance_with_mapper_function():
+    from papylon.gen import choose
 
     gen = choose(1, 10)
-    new_gen = map(lambda x: x * 2, gen)
+    new_gen = gen.map(lambda x: x * 2)
     generated_by_new_gen = new_gen.generate()
     assert type(generated_by_new_gen) == int
     assert generated_by_new_gen in range(2, 21, 2)
@@ -151,7 +150,7 @@ def test_map_should_create_new_Gen_instance_with_mapper_function():
     assert generated_by_gen in range(1, 11)
 
 
-def test_given_a_value_v_when_constant_v_then_returns_Gen_instance_which_generates_only_v():
+def test_given_a_value_v_when_constant_v_then_returns_gen_instance_which_generates_only_v():
     from papylon.gen import constant
 
     value = 6
