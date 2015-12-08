@@ -1,4 +1,4 @@
-def test_given_count_as_100_when_PropChecker_check_a_propety_then_the_property_runs_100_times():
+def test_given_count_as_100_when_prop_checker_check_a_property_then_the_property_runs_100_times():
     from papylon.checker import PropChecker
     from papylon.prop import for_all
     from papylon.arbitrary import arb_int
@@ -10,7 +10,7 @@ def test_given_count_as_100_when_PropChecker_check_a_propety_then_the_property_r
     assert count == 100
 
 
-def test_given_property_which_fails_to_generate_when_PropChecker_check_it_then_returns_generation_failure_report():
+def test_given_property_which_fails_to_generate_when_prop_checker_check_it_then_returns_generation_failure_report():
     from papylon.checker import PropChecker
     from papylon.prop import for_all
     from papylon.arbitrary import from_gen
@@ -26,7 +26,7 @@ def test_given_property_which_fails_to_generate_when_PropChecker_check_it_then_r
     assert trial_to_generate == 100
 
 
-def test_given_falsifiable_property_when_PropChecker_check_the_property_then_returns_falsified_report():
+def test_given_falsifiable_property_when_prop_checker_check_the_property_then_returns_falsified_report():
     from papylon.checker import PropChecker
     from papylon.prop import for_all
     from papylon.arbitrary import arb_int
@@ -52,7 +52,7 @@ def test_given_exceptional_property_when_check_the_property_then_returns_falsifi
     assert error is not None
 
 
-def test_given_prop_execute_which_throws_error_when_PropChecker_check_the_property_then_returns_troubled_report():
+def test_given_prop_execute_which_throws_error_when_prop_checker_check_the_property_then_returns_troubled_report():
     from papylon.checker import PropChecker
 
     class DummyProp:
@@ -61,18 +61,18 @@ def test_given_prop_execute_which_throws_error_when_PropChecker_check_the_proper
 
         def execute(self):
             raise ValueError(self.msg)
-    msg = "Something has been occurred."
-    prop = DummyProp(msg)
+    message = "Something has been occurred."
+    prop = DummyProp(message)
     sut = PropChecker(100)
     result = sut.check(prop)
     assert result.has_troubled()
     error, ex_traceback = result.get()
     assert type(error) == ValueError
-    assert error.args[0] == msg
+    assert error.args[0] == message
     assert ex_traceback is not None
 
 
-def test_given_count_as_0_when_PropChecker_is_instantiated_then_occurs_ValueError():
+def test_given_count_as_0_when_prop_checker_is_instantiated_then_occurs_value_error():
     from papylon.checker import PropChecker
 
     try:
@@ -92,7 +92,7 @@ def test_when_check_a_valid_property_then_it_should_run_well(capsys):
     assert out == "OK, passed 100 tests.\n"
 
 
-def test_when_check_and_assert_an_invalid_property_then_raise_AssertionError():
+def test_when_check_and_assert_an_invalid_property_then_raise_assertion_error():
     from papylon.checker import check_and_assert
     from papylon.prop import for_all
     from papylon.arbitrary import arb_float
@@ -104,7 +104,7 @@ def test_when_check_and_assert_an_invalid_property_then_raise_AssertionError():
         assert True
 
 
-def test_when_check_all_a_Properties_instance_then_check_all_properties(capsys):
+def test_when_check_all_a_properties_instance_then_check_all_properties(capsys):
     from papylon.checker import check_all
     from papylon.prop import for_all, Properties
     from papylon.arbitrary import arb_int, arb_list
