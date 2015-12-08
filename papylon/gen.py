@@ -28,12 +28,15 @@ class Gen:
             if i >= self.trial:
                 raise StopGeneration(i)
 
+    def map(self, f):
+        return Gen(lambda: self.gen, f)
+
     def such_that(self, predicate, trial=DEFAULT_TRIAL):
         return Gen(lambda: self.gen, predicate=predicate, trial=trial)
 
 
-def one_of(values):
-    return random.choice(values)
+def one_of(gens):
+    return random.choice(gens)
 
 
 def choose(min_value, max_value):
@@ -58,17 +61,13 @@ def choose(min_value, max_value):
         return Gen(gen)
 
 
-def frequency(weighted_values):
+def frequency(weighted_gens):
     """ref: https://docs.python.org/3.4/library/random.html#examples-and-recipes"""
 
-    weights, gens = zip(*weighted_values)
+    weights, gens = zip(*weighted_gens)
     cumdist = list(itertools.accumulate(weights))
     x = random.random() * cumdist[-1]
     return gens[bisect.bisect(cumdist, x)]
-
-
-def map(f, gen):
-    return Gen(lambda: gen.gen, f)
 
 
 def constant(value):

@@ -4,7 +4,7 @@ import random
 import struct
 import datetime
 
-from papylon.gen import Gen, choose, frequency, map
+from papylon.gen import Gen, choose, frequency
 from papylon.shrinker import (
     IntShrinker, FloatShrinker, CharShrinker,
     DateShrinker, ListShrinker, StrShrinker)
@@ -50,8 +50,8 @@ class ArbFloat(AbstractArbitrary):
 
 class ArbChar(AbstractArbitrary):
     def __init__(self):
-        self.gen = frequency([(0xD800, map(chr, choose(0, 0xD800-1))),
-                              (0xFFFF-0xDFFF, map(chr, choose(0xdFFF+1, 0xFFFF)))])
+        self.gen = frequency([(0xD800, choose(0, 0xD800-1).map(chr)),
+                              (0xFFFF-0xDFFF, choose(0xdFFF+1, 0xFFFF).map(chr))])
         self.shrinker = CharShrinker()
 
     def arbitrary(self):

@@ -139,10 +139,10 @@ def test_when_frequency_runs_10000_times_then_its_choices_should_be_satisfied_wi
 
 
 def test_map_should_create_new_Gen_instance_with_mapper_function():
-    from papylon.gen import choose, map
+    from papylon.gen import choose
 
     gen = choose(1, 10)
-    new_gen = map(lambda x: x * 2, gen)
+    new_gen = gen.map(lambda x: x * 2)
     generated_by_new_gen = new_gen.generate()
     assert type(generated_by_new_gen) == int
     assert generated_by_new_gen in range(2, 21, 2)

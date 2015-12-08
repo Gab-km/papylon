@@ -9,7 +9,7 @@ class AbstractShrinker:
         raise NotImplementedError("AbstractShrinker#shrink")
 
 
-def interleave(xs, ys):
+def _interleave(xs, ys):
     _xs = xs
     _ys = ys
     result = []
@@ -26,7 +26,7 @@ def interleave(xs, ys):
         result.append(y)
 
 
-def empty_iterable():
+def _empty_iterable():
     return iter([])
 
 
@@ -42,10 +42,10 @@ class IntShrinker(AbstractShrinker):
             return result
 
         if value == 0:
-            return empty_iterable()
+            return _empty_iterable()
         else:
             ns = list(map(lambda n: value - n, halfs(int(value / 2))))
-            return itertools.chain([0], interleave(ns, list(map(lambda n: (-1) * n, ns))))
+            return itertools.chain([0], _interleave(ns, list(map(lambda n: (-1) * n, ns))))
 
 
 class FloatShrinker(AbstractShrinker):
@@ -62,12 +62,12 @@ class FloatShrinker(AbstractShrinker):
             return result
 
         if value == 0:
-            return empty_iterable()
+            return _empty_iterable()
         elif (abs(value) == float('inf')) or (math.isnan(value)):
             return iter([0.0])
         else:
             ns = list(map(lambda n: value - n, halfs(value / 2)))
-            return itertools.chain([0], interleave(ns, list(map(lambda n: (-1) * n, ns))))
+            return itertools.chain([0], _interleave(ns, list(map(lambda n: (-1) * n, ns))))
 
 
 class CharShrinker(AbstractShrinker):
@@ -89,7 +89,7 @@ class DateShrinker(AbstractShrinker):
         elif value.hour != 0:
             return iter([datetime.datetime(value.year, value.month, value.day)])
         else:
-            return empty_iterable()
+            return _empty_iterable()
 
 
 class ListShrinker(AbstractShrinker):
