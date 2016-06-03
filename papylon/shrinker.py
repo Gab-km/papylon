@@ -1,10 +1,23 @@
+"""Classes to shrink results with their counter-examples."""
+
 import itertools
 import math
 import datetime
 
 
 class AbstractShrinker:
+    """An abstract class to shrink arguments."""
+
     def shrink(self, value):
+        """
+        Shrink arguments with a given value.
+
+        :param value:
+            The value of counter-example.
+
+        :return:
+        """
+
         raise NotImplementedError("AbstractShrinker#shrink")
 
 
@@ -30,7 +43,19 @@ def _empty_iterable():
 
 
 class IntShrinker(AbstractShrinker):
+    """A shrinker of integer."""
+
     def shrink(self, value):
+        """
+        Return an int iterator of shrunk result.
+
+        :param value: int
+            The int value of counter-example.
+
+        :return:
+            The int iterator which is shrunk with a given value.
+        """
+
         def halfs(n):
             result = []
             if n != 0:
@@ -48,7 +73,19 @@ class IntShrinker(AbstractShrinker):
 
 
 class FloatShrinker(AbstractShrinker):
+    """A shrinker of floating point number."""
+
     def shrink(self, value):
+        """
+        Return a float iterator of shrunk result.
+
+        :param value: float
+            The float value of counter-example.
+
+        :return:
+            The float iterator which is shrunk with a given value.
+        """
+
         def halfs(n):
             result = []
             if n != 0:
@@ -70,7 +107,19 @@ class FloatShrinker(AbstractShrinker):
 
 
 class CharShrinker(AbstractShrinker):
+    """A shrinker of character."""
+
     def shrink(self, value):
+        """
+        Return a char iterator of shrunk result.
+
+        :param value: str
+            The 1-length str value of counter-example.
+
+        :return:
+            The char iterator which is shrunk with a given value.
+        """
+
         result = []
         for c in ['a', 'b', 'c']:
             if (ord(c) < ord(value)) or (not str.islower(value)):
@@ -80,7 +129,19 @@ class CharShrinker(AbstractShrinker):
 
 
 class DateShrinker(AbstractShrinker):
+    """A shrinker of date."""
+
     def shrink(self, value):
+        """
+        Return a date iterator of shrunk result.
+
+        :param value: datetime.datetime
+            The datetime value of counter-example.
+
+        :return:
+            The datetime iterator which is shrunk with a given value.
+        """
+
         if value.second != 0:
             return iter([datetime.datetime(value.year, value.month, value.day, value.hour, value.minute)])
         elif value.minute != 0:
@@ -92,7 +153,19 @@ class DateShrinker(AbstractShrinker):
 
 
 class ListShrinker(AbstractShrinker):
+    """A shrinker of list."""
+
     def shrink(self, value):
+        """
+        Return a list iterator of shrunk result.
+
+        :param value: list
+            The list value of counter-example.
+
+        :return:
+            The list iterator which is shrunk with a given value.
+        """
+
         def shrink_list(l):
             if not l:
                 return []
@@ -112,6 +185,18 @@ class ListShrinker(AbstractShrinker):
 
 
 class StrShrinker(AbstractShrinker):
+    """A shrinker of str."""
+
     def shrink(self, value):
+        """
+        Return a str iterator of shrunk result.
+
+        :param value: str
+            The str value of counter-example.
+
+        :return:
+            The str iterator which is shrunk with a given value.
+        """
+
         shrinker = ListShrinker()
         return iter(map(lambda s: str.join("", s), shrinker.shrink(value)))
