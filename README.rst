@@ -3,6 +3,12 @@ Papylon
 
 Papylon is a Python library for random testing of program properties.
 
+.. image:: https://travis-ci.org/Gab-km/papylon.svg
+    :target: https://travis-ci.org/Gab-km/papylon
+
+.. image:: https://badge.fury.io/py/papylon.svg
+    :target: https://badge.fury.io/py/papylon
+
 Example
 -------
 
@@ -38,9 +44,3 @@ If a property failed, Papylon reports which arbitrary(s) made it failed:
 
   Falsified after 2 tests (31 shrinks):
   > [-1]
-
-Build status
-------------
-
-.. image:: https://travis-ci.org/Gab-km/papylon.svg
-    :target: https://travis-ci.org/Gab-km/papylon
